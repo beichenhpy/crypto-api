@@ -8,8 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <pre>
@@ -24,7 +24,7 @@ public class DecryptRequestParamsWrapper extends HttpServletRequestWrapper {
 
     private final String aesKey;
 
-    private final Map<String, String[]> decryptParameters = new ConcurrentHashMap<>(10);
+    private final Map<String, String[]> decryptParameters = new HashMap<>();
 
     public DecryptRequestParamsWrapper(HttpServletRequest request, String aesKey) {
         super(request);
