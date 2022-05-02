@@ -20,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * <pre>
- *
+ *    对@RequestBody修饰的并且方法上有@Secret注解的，进行参数解密
  * </pre>
  *
  * @author beichenhpy

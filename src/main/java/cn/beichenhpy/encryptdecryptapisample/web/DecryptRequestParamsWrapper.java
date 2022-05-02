@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <pre>
- *   解密@RequestParam的wrapper
+ *   解密@RequestParam的wrapper，配合filter使用
  * </pre>
  *
  * @author beichenhpy
