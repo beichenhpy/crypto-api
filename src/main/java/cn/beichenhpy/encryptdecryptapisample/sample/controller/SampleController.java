@@ -13,8 +13,8 @@
 
 package cn.beichenhpy.encryptdecryptapisample.sample.controller;
 
-import cn.beichenhpy.encryptdecryptapisample.modal.Result;
 import cn.beichenhpy.encryptdecryptapisample.sample.entity.User;
+import cn.beichenhpy.encryptdecryptapisample.sample.modal.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;

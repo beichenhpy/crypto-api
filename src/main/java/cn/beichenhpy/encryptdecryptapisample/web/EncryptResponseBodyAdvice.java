@@ -13,7 +13,6 @@
 
 package cn.beichenhpy.encryptdecryptapisample.web;
 
-import cn.beichenhpy.encryptdecryptapisample.modal.Result;
 import cn.beichenhpy.encryptdecryptapisample.util.AES;
 import cn.beichenhpy.encryptdecryptapisample.web.config.EncryptDecryptApiProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @ControllerAdvice
-public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Result<String>> {
+public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
 
     @Resource
     private ObjectMapper objectMapper;
@@ -55,25 +54,15 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Result<Stri
         return encryptDecryptApiProperties.getUrls().contains(request.getServletPath());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Result<String> beforeBodyWrite(Result<String> body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
+    public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         String aesKey = encryptDecryptApiProperties.getAesKey();
         if (body != null) {
-            if (body.getData() != null) {
-                try {
-                    String _data = AES.encrypt(objectMapper.writeValueAsString(body.getData()), aesKey);
-                    body.setData(_data);
-                } catch (Exception e) {
-                    log.error("参数解密失败: {}, {} , AES KEY: {}", e.getMessage(), e, aesKey);
-                }
-            }
-            if (body.getMsg() != null) {
-                try {
-                    String _msg = AES.encrypt(objectMapper.writeValueAsString(body.getMsg()), aesKey);
-                    body.setMsg(_msg);
-                } catch (Exception e) {
-                    log.error("参数解密失败: {}, {} , AES KEY: {}", e.getMessage(), e, aesKey);
-                }
+            try {
+                return (T) AES.encrypt(objectMapper.writeValueAsString(body), aesKey);
+            } catch (Exception e) {
+                log.error("参数解密失败: {}, {} , AES KEY: {}", e.getMessage(), e, aesKey);
             }
         }
         return body;
