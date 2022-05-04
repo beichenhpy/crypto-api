@@ -13,7 +13,6 @@
 
 package cn.beichenhpy.encryptdecryptapisample.sample.controller;
 
-import cn.beichenhpy.encryptdecryptapisample.annotation.Secret;
 import cn.beichenhpy.encryptdecryptapisample.modal.Result;
 import cn.beichenhpy.encryptdecryptapisample.sample.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +41,6 @@ public class SampleController {
     }
 
 
-    @Secret
     @GetMapping("/query")
     public Result<User> query(@RequestBody User user) {
         User result = new User();

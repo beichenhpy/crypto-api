@@ -13,11 +13,10 @@
 
 package cn.beichenhpy.encryptdecryptapisample.web;
 
-import cn.beichenhpy.encryptdecryptapisample.annotation.Secret;
 import cn.beichenhpy.encryptdecryptapisample.util.AES;
+import cn.beichenhpy.encryptdecryptapisample.web.config.EncryptDecryptApiProperties;
 import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpInputMessage;
@@ -25,6 +24,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +34,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * <pre>
- *    对@RequestBody修饰的并且方法上有@Secret注解的，进行参数解密
+ *    对@RequestBody修饰的并且在配置文件配置encrypt-decrypt-api:decrypt-urls的，进行参数解密
  * </pre>
  *
  * @author beichenhpy
@@ -43,12 +44,15 @@ import java.nio.charset.StandardCharsets;
 @ControllerAdvice
 public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
 
-    @Value("${encrypt-decrypt-api.aes-key}")
-    private String aesKey;
+    @Resource
+    private EncryptDecryptApiProperties encryptDecryptApiProperties;
+
+    @Resource
+    private HttpServletRequest request;
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return methodParameter.hasMethodAnnotation(Secret.class);
+        return encryptDecryptApiProperties.getDecryptUrls().contains(request.getServletPath());
     }
 
     @Override
@@ -56,7 +60,7 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
         InputStream body = inputMessage.getBody();
         byte[] bytes = IoUtil.readBytes(body);
         try {
-            String decrypt = AES.decrypt(new String(bytes), aesKey);
+            String decrypt = AES.decrypt(new String(bytes), encryptDecryptApiProperties.getAesKey());
             return new HttpInputMessage() {
                 @Override
                 public InputStream getBody() {
@@ -69,7 +73,7 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
                 }
             };
         } catch (Exception e) {
-            log.error("参数解密失败: {}", e.getMessage());
+            log.error("参数解密失败: {}, {} , AES KEY: {}", e.getMessage(), e, encryptDecryptApiProperties.getAesKey());
         }
         return super.beforeBodyRead(inputMessage, parameter, targetType, converterType);
     }
