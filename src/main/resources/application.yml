@@ -1,5 +1,5 @@
 encrypt-decrypt-api:
   aes-key: f5d830d77163a58f
-  decrypt-urls:
+  urls:
     - /user
     - /query

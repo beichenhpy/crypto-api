@@ -52,7 +52,7 @@ public class EncryptResponseBodyAdvice implements ResponseBodyAdvice<Result<Stri
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return encryptDecryptApiProperties.getDecryptUrls().contains(request.getServletPath());
+        return encryptDecryptApiProperties.getUrls().contains(request.getServletPath());
     }
 
     @Override

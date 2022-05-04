@@ -52,7 +52,7 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return encryptDecryptApiProperties.getDecryptUrls().contains(request.getServletPath());
+        return encryptDecryptApiProperties.getUrls().contains(request.getServletPath());
     }
 
     @Override

@@ -35,5 +35,5 @@ public class EncryptDecryptApiProperties {
 
     private String aesKey;
 
-    private List<String> decryptUrls;
+    private List<String> urls;
 }
