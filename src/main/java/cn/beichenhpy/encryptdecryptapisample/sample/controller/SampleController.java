@@ -42,7 +42,7 @@ public class SampleController {
 
 
     @GetMapping("/query")
-    public Result<User> query(@RequestBody User user) {
+    public Result<User> query(@RequestBody(required = false) User user) {
         User result = new User();
         result.setBirthday(LocalDateTime.of(1997, 6, 24, 0, 0, 0));
         result.setAge(24);
