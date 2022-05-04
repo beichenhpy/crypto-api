@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * <pre>
- *   针对@ResponseBody并且在配置文件配置encrypt-decrypt-api:decrypt-urls的进行加密，需要根据返回值类型定制
+ *   针对@ResponseBody并且在配置文件配置encrypt-decrypt-api:urls的进行加密，需要根据返回值类型定制
  * </pre>
  *
  * @author beichenhpy

@@ -29,7 +29,7 @@ import java.io.IOException;
 /**
  * <pre>
  *   解密@RequestParam符合AES加密的参数的过滤器
- *   根据encrypt-decrypt-api:decrypt-urls 设置的需要解密的url进行过滤
+ *   根据encrypt-decrypt-api:urls 设置的需要解密的url进行过滤
  * </pre>
  *
  * @author beichenhpy
