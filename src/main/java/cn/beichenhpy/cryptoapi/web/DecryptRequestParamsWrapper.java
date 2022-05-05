@@ -11,9 +11,9 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample.web;
+package cn.beichenhpy.cryptoapi.web;
 
-import cn.beichenhpy.encryptdecryptapisample.util.AES;
+import cn.beichenhpy.cryptoapi.util.AES;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +50,7 @@ public class DecryptRequestParamsWrapper extends HttpServletRequestWrapper {
                     values[i] = decrypt(values[i]);
                 } catch (Exception e) {
                     //do nothing
-                    log.error("解密失败:{}", e.getMessage());
+                    log.error("AES KEY: {}, 参数解密失败: {}, {}", aesKey, e.getMessage(), e);
                 }
             }
             decryptParameters.put(entry.getKey(), values);

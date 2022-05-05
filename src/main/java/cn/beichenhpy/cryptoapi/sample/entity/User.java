@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample.sample.entity;
+package cn.beichenhpy.cryptoapi.sample.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

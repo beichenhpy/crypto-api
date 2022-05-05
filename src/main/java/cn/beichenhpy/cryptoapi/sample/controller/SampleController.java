@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample.sample.controller;
+package cn.beichenhpy.cryptoapi.sample.controller;
 
-import cn.beichenhpy.encryptdecryptapisample.sample.entity.User;
-import cn.beichenhpy.encryptdecryptapisample.sample.modal.Result;
+import cn.beichenhpy.cryptoapi.sample.entity.User;
+import cn.beichenhpy.cryptoapi.sample.modal.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;

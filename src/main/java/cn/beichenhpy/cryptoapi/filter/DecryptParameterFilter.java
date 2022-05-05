@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample.filter;
+package cn.beichenhpy.cryptoapi.filter;
 
-import cn.beichenhpy.encryptdecryptapisample.web.DecryptRequestParamsWrapper;
-import cn.beichenhpy.encryptdecryptapisample.web.config.EncryptDecryptApiProperties;
+import cn.beichenhpy.cryptoapi.web.DecryptRequestParamsWrapper;
+import cn.beichenhpy.cryptoapi.web.config.CryptoApiProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,16 +40,16 @@ import java.io.IOException;
 public class DecryptParameterFilter extends OncePerRequestFilter {
 
     @Resource
-    private EncryptDecryptApiProperties encryptDecryptApiProperties;
+    private CryptoApiProperties cryptoApiProperties;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !encryptDecryptApiProperties.getUrls().contains(request.getServletPath());
+        return !cryptoApiProperties.getUrls().contains(request.getServletPath());
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        request = new DecryptRequestParamsWrapper(request, encryptDecryptApiProperties.getAesKey());
+        request = new DecryptRequestParamsWrapper(request, cryptoApiProperties.getAesKey());
         filterChain.doFilter(request, response);
     }
 }

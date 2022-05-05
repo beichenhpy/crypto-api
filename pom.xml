@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.beichenhpy</groupId>
-    <artifactId>encrypt-decrypt-api-sample</artifactId>
+    <artifactId>crypto-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>encrypt-decrypt-api-sample</name>
-    <description>encrypt-decrypt-api-sample</description>
+    <name>crypto-api</name>
+    <description>crypto-api</description>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

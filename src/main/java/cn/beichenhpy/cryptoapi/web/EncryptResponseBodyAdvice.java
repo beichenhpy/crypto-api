@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample.web;
+package cn.beichenhpy.cryptoapi.web;
 
-import cn.beichenhpy.encryptdecryptapisample.util.AES;
-import cn.beichenhpy.encryptdecryptapisample.web.config.EncryptDecryptApiProperties;
+import cn.beichenhpy.cryptoapi.util.AES;
+import cn.beichenhpy.cryptoapi.web.config.CryptoApiProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -47,22 +47,22 @@ public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
     private HttpServletRequest request;
 
     @Resource
-    private EncryptDecryptApiProperties encryptDecryptApiProperties;
+    private CryptoApiProperties cryptoApiProperties;
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return encryptDecryptApiProperties.getUrls().contains(request.getServletPath());
+        return cryptoApiProperties.getUrls().contains(request.getServletPath());
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        String aesKey = encryptDecryptApiProperties.getAesKey();
+        String aesKey = cryptoApiProperties.getAesKey();
         if (body != null) {
             try {
                 return (T) AES.encrypt(objectMapper.writeValueAsString(body), aesKey);
             } catch (Exception e) {
-                log.error("参数解密失败: {}, {} , AES KEY: {}", e.getMessage(), e, aesKey);
+                log.error("AES KEY: {}, 参数解密失败: {}, {}", aesKey, e.getMessage(), e);
             }
         }
         return body;

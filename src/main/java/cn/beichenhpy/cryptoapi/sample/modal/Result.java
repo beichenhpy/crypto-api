@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample.sample.modal;
+package cn.beichenhpy.cryptoapi.sample.modal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

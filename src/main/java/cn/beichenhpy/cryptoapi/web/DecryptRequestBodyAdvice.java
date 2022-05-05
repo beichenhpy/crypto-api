@@ -11,10 +11,10 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample.web;
+package cn.beichenhpy.cryptoapi.web;
 
-import cn.beichenhpy.encryptdecryptapisample.util.AES;
-import cn.beichenhpy.encryptdecryptapisample.web.config.EncryptDecryptApiProperties;
+import cn.beichenhpy.cryptoapi.util.AES;
+import cn.beichenhpy.cryptoapi.web.config.CryptoApiProperties;
 import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -45,14 +45,14 @@ import java.nio.charset.StandardCharsets;
 public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
 
     @Resource
-    private EncryptDecryptApiProperties encryptDecryptApiProperties;
+    private CryptoApiProperties cryptoApiProperties;
 
     @Resource
     private HttpServletRequest request;
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return encryptDecryptApiProperties.getUrls().contains(request.getServletPath());
+        return cryptoApiProperties.getUrls().contains(request.getServletPath());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
         InputStream body = inputMessage.getBody();
         byte[] bytes = IoUtil.readBytes(body);
         try {
-            String decrypt = AES.decrypt(new String(bytes), encryptDecryptApiProperties.getAesKey());
+            String decrypt = AES.decrypt(new String(bytes), cryptoApiProperties.getAesKey());
             return new HttpInputMessage() {
                 @Override
                 public InputStream getBody() {
@@ -73,7 +73,7 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
                 }
             };
         } catch (Exception e) {
-            log.error("参数解密失败: {}, {} , AES KEY: {}", e.getMessage(), e, encryptDecryptApiProperties.getAesKey());
+            log.error("AES KEY: {}, 参数解密失败: {}, {}", cryptoApiProperties.getAesKey(), e.getMessage(), e);
         }
         return super.beforeBodyRead(inputMessage, parameter, targetType, converterType);
     }

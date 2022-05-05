@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample.web.config;
+package cn.beichenhpy.cryptoapi.web.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,8 +29,8 @@ import java.util.List;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "encrypt-decrypt-api")
-public class EncryptDecryptApiProperties {
+@ConfigurationProperties(prefix = "crypto-api")
+public class CryptoApiProperties {
 
 
     private String aesKey;

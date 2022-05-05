@@ -11,16 +11,16 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.encryptdecryptapisample;
+package cn.beichenhpy.cryptoapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EncryptDecryptApiSampleApplication {
+public class CryptoApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EncryptDecryptApiSampleApplication.class, args);
+        SpringApplication.run(CryptoApiApplication.class, args);
     }
 
 }
