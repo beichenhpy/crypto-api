@@ -1,4 +1,4 @@
-# encrypt-decrypt-api-sample
+# crypto-api
 
 Spring boot Api接口，请求参数解密，请求结果加密例子  
 加密选择简单的AES加密。`AES/CBC/PKCS5Padding`  
