@@ -11,12 +11,12 @@ Spring boot Api接口，请求参数解密，请求结果加密例子
 3. `@RequestParam` 使用了 `HttpServletRequestWrapper` + `Filter`
 
 
-测试例子见 `cn.beichenhpy.encryptdecryptapisample.sample`包下。
+测试例子见 `cn.beichenhpy.cryptoapi.sample`包下。
 
 使用需要配置文件，如下
 
 ```yaml
-encrypt-decrypt-api:
+crypto-api:
   aes-key: f5d830d77163a58f #aes的秘钥
   urls: #需要进行加密解密的url
     - /user
