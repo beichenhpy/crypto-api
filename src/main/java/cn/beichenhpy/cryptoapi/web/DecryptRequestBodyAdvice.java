@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * <pre>
@@ -52,7 +53,11 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiProperties.getUrls().contains(request.getServletPath());
+        List<String> needCryptoUrls = cryptoApiProperties.getUrls();
+        if (needCryptoUrls == null){
+            return false;
+        }
+        return needCryptoUrls.contains(request.getServletPath());
     }
 
     @Override

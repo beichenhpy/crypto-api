@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <pre>
@@ -51,7 +52,11 @@ public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiProperties.getUrls().contains(request.getServletPath());
+        List<String> needCryptoUrls = cryptoApiProperties.getUrls();
+        if (needCryptoUrls == null){
+            return false;
+        }
+        return needCryptoUrls.contains(request.getServletPath());
     }
 
     @SuppressWarnings("unchecked")
@@ -62,7 +67,7 @@ public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
             try {
                 return (T) AES.encrypt(objectMapper.writeValueAsString(body), aesKey);
             } catch (Exception e) {
-                log.error("AES KEY: {}, 参数解密失败: {}, {}", aesKey, e.getMessage(), e);
+                log.error("AES KEY: {}, 返回值加密失败: {}, {}", aesKey, e.getMessage(), e);
             }
         }
         return body;

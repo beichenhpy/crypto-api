@@ -25,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * <pre>
@@ -44,7 +45,11 @@ public class DecryptParameterFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !cryptoApiProperties.getUrls().contains(request.getServletPath());
+        List<String> needCryptoUrls = cryptoApiProperties.getUrls();
+        if (needCryptoUrls == null){
+            return true;
+        }
+        return !needCryptoUrls.contains(request.getServletPath());
     }
 
     @Override
