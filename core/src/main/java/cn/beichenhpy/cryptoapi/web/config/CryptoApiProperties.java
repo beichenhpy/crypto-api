@@ -17,7 +17,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,7 +36,7 @@ import java.util.Map;
 public class CryptoApiProperties {
 
 
-    private Map<String, CryptoUrl> urls = new LinkedHashMap<>();
+    private Map<String, CryptoUrl> apis = new LinkedHashMap<>();
 
 
     @Data
@@ -42,6 +44,6 @@ public class CryptoApiProperties {
 
         private String aesKey;
 
-        private String url;
+        private List<String> urls = new ArrayList<>();
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,20 +28,22 @@ public class CryptoApiHelper {
 
     @PostConstruct
     public void initCache() {
-        Map<String, CryptoApiProperties.CryptoUrl> cryptoUrls = cryptoApiProperties.getUrls();
+        Map<String, CryptoApiProperties.CryptoUrl> cryptoUrls = cryptoApiProperties.getApis();
         if (cryptoUrls.isEmpty()) {
             return;
         }
         CRYPTO_MODEL_CACHE.clear();
         for (Map.Entry<String, CryptoApiProperties.CryptoUrl> entry : cryptoUrls.entrySet()) {
             CryptoApiProperties.CryptoUrl cryptoUrl = entry.getValue();
-            String url = cryptoUrl.getUrl();
+            List<String> urls = cryptoUrl.getUrls();
             String aesKey = cryptoUrl.getAesKey();
-            if (StringUtils.hasText(url)) {
+            if (!urls.isEmpty()) {
                 if (!StringUtils.hasText(aesKey)) {
-                    throw new CryptoApiException("url: [" + url + " ]未填写对应aesKey");
+                    throw new CryptoApiException("urls: [" + urls + " ]未填写对应aesKey");
                 }
-                CRYPTO_MODEL_CACHE.put(url, aesKey);
+                for (String url : urls) {
+                    CRYPTO_MODEL_CACHE.put(url, aesKey);
+                }
             }
         }
     }
