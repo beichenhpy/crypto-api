@@ -36,14 +36,14 @@ import java.util.Map;
 public class CryptoApiProperties {
 
 
-    private Map<String, CryptoUrl> apis = new LinkedHashMap<>();
+    private Map<String, CryptoPath> apis = new LinkedHashMap<>();
 
 
     @Data
-    public static class CryptoUrl {
+    public static class CryptoPath {
 
         private String aesKey;
 
-        private List<String> urls = new ArrayList<>();
+        private List<String> paths = new ArrayList<>();
     }
 }

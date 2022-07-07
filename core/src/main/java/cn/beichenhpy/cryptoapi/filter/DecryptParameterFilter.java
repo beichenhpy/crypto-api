@@ -41,12 +41,12 @@ public class DecryptParameterFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return cryptoApiHelper.getAesKeyByUrl(request.getServletPath()) == null;
+        return cryptoApiHelper.getAesKeyByPath(request.getServletPath()) == null;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        request = new DecryptRequestParamsWrapper(request, cryptoApiHelper.getAesKeyByUrl(request.getServletPath()));
+        request = new DecryptRequestParamsWrapper(request, cryptoApiHelper.getAesKeyByPath(request.getServletPath()));
         filterChain.doFilter(request, response);
     }
 }

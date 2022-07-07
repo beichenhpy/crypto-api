@@ -51,13 +51,13 @@ public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiHelper.getAesKeyByUrl(request.getServletPath()) != null;
+        return cryptoApiHelper.getAesKeyByPath(request.getServletPath()) != null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse response) {
-        String aesKey = cryptoApiHelper.getAesKeyByUrl(request.getServletPath());
+        String aesKey = cryptoApiHelper.getAesKeyByPath(request.getServletPath());
         if (body != null) {
             try {
                 return (T) AES.encrypt(objectMapper.writeValueAsString(body), aesKey);

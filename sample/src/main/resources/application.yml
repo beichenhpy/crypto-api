@@ -1,7 +1,7 @@
 crypto-api:
   apis:
     demo1:
-      urls:
-        - /user
-        - /query
+      paths:
+        - /demo/*
+        - /demo/query
       aesKey: f5d830d77163a58f

@@ -52,13 +52,13 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiHelper.getAesKeyByUrl(request.getServletPath()) != null;
+        return cryptoApiHelper.getAesKeyByPath(request.getServletPath()) != null;
     }
 
     @Override
     public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
         InputStream body = inputMessage.getBody();
-        String aesKey = cryptoApiHelper.getAesKeyByUrl(request.getServletPath());
+        String aesKey = cryptoApiHelper.getAesKeyByPath(request.getServletPath());
         //copy stream
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[8024];
