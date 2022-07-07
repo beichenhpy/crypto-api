@@ -20,12 +20,8 @@ Spring boot Api接口，请求参数解密，请求结果加密例子
 crypto-api:
   apis:
     demo1:
-      urls:
-        - /user
-        - /query
-      aesKey: f5d830d77163a58f
-    demo2:
-      urls:
+      paths:
         - /demo/*
-      aesKey: f5d830d77163a58c
+        - /demo/query
+      aesKey: f5d830d77163a58f
 ```
