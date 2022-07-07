@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.beichenhpy</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>crypto-api-starter</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
