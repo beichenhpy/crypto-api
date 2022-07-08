@@ -8,32 +8,77 @@
         <module>crypto-api-starter</module>
         <module>crypto-api-core</module>
     </modules>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.7</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+
     <groupId>cn.beichenhpy</groupId>
     <artifactId>crypto-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>crypto-api</name>
     <description>crypto-api</description>
 
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>2.6.7</spring-boot.version>
+        <javax-servlet.version>4.0.1</javax-servlet.version>
+        <spring.version>5.3.19</spring.version>
+        <project.version>0.0.1-SNAPSHOT</project.version>
+        <lombok.version>1.18.24</lombok.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax-servlet.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-configuration-processor</artifactId>
+                <optional>true</optional>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-json</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.beichenhpy</groupId>
+                <artifactId>crypto-api-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.beichenhpy</groupId>
+                <artifactId>crypto-api-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
