@@ -14,7 +14,6 @@
 package com.sample.foo.controller;
 
 import cn.beichenhpy.cryptoapi.util.AES;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sample.foo.entity.User;
 import com.sample.foo.modal.Result;

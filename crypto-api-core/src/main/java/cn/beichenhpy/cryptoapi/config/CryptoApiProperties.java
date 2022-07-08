@@ -11,10 +11,12 @@
  * limitations under the License.
  */
 
-package cn.beichenhpy.cryptoapi.web.config;
+package cn.beichenhpy.cryptoapi.config;
 
+import cn.beichenhpy.cryptoapi.util.CryptoApiHelper;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
@@ -24,7 +26,13 @@ import java.util.Map;
 
 /**
  * <pre>
- *
+ *  crypto-api:
+ *   apis:
+ *     demo1:
+ *       paths:
+ *         - /demo/*
+ *         - /demo/query
+ *       aesKey: f5d830d77163a58f
  * </pre>
  *
  * @author beichenhpy
@@ -45,5 +53,16 @@ public class CryptoApiProperties {
         private String aesKey;
 
         private List<String> paths = new ArrayList<>();
+    }
+
+
+    @Bean
+    public CryptoApiProperties cryptoApiProperties() {
+        return new CryptoApiProperties();
+    }
+
+    @Bean
+    public CryptoApiHelper cryptoApiHelper() {
+        return new CryptoApiHelper();
     }
 }

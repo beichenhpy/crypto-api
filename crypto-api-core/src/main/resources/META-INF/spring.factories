@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.beichenhpy.cryptoapi.web.CryptoApiAutoConfiguration
+cn.beichenhpy.cryptoapi.config.CryptoApiProperties

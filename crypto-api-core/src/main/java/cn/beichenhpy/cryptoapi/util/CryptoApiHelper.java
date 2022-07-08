@@ -1,7 +1,7 @@
 package cn.beichenhpy.cryptoapi.util;
 
 import cn.beichenhpy.cryptoapi.exception.CryptoApiException;
-import cn.beichenhpy.cryptoapi.web.config.CryptoApiProperties;
+import cn.beichenhpy.cryptoapi.config.CryptoApiProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -10,7 +10,6 @@ import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

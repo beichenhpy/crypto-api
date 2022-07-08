@@ -1,9 +1,6 @@
-package cn.beichenhpy.cryptoapi.web.config;
+package cn.beichenhpy.cryptoapi.web;
 
 import cn.beichenhpy.cryptoapi.filter.DecryptParameterFilter;
-import cn.beichenhpy.cryptoapi.util.CryptoApiHelper;
-import cn.beichenhpy.cryptoapi.web.DecryptRequestBodyAdvice;
-import cn.beichenhpy.cryptoapi.web.EncryptResponseBodyAdvice;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,16 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CryptoApiAutoConfiguration<T> {
 
-
-    @Bean
-    public CryptoApiProperties cryptoApiProperties() {
-        return new CryptoApiProperties();
-    }
-
-    @Bean
-    public CryptoApiHelper cryptoApiHelper() {
-        return new CryptoApiHelper();
-    }
 
     @Bean
     public DecryptRequestBodyAdvice decryptRequestBodyAdvice() {
