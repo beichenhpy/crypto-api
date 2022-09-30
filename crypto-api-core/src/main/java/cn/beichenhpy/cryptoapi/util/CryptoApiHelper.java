@@ -106,12 +106,18 @@ public class CryptoApiHelper {
      * @return 返回aesKey
      */
     public String getAesKeyByPath(String path) {
-        //先判断是否满足通配符
+        //先判断是否满足普通的链接
+        String ak = COMMON_PATH_CACHE.get(path);
+        if (StringUtils.hasText(ak)) {
+            return ak;
+        }
+        //不存在，再匹配通配
         for (Map.Entry<String, String> entry : WILDCARD_PATH_CACHE.entrySet()) {
             if (path.startsWith(entry.getKey())) {
-                return entry.getValue();
+                ak = entry.getValue();
+                break;
             }
         }
-        return COMMON_PATH_CACHE.get(path);
+        return ak;
     }
 }
