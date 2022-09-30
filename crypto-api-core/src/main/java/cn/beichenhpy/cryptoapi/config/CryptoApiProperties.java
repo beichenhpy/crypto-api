@@ -63,6 +63,6 @@ public class CryptoApiProperties {
 
     @Bean
     public CryptoApiHelper cryptoApiHelper() {
-        return new CryptoApiHelper();
+        return new CryptoApiHelper(cryptoApiProperties());
     }
 }

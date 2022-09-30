@@ -1,13 +1,13 @@
 package cn.beichenhpy.cryptoapi.util;
 
-import cn.beichenhpy.cryptoapi.exception.CryptoApiException;
 import cn.beichenhpy.cryptoapi.config.CryptoApiProperties;
+import cn.beichenhpy.cryptoapi.exception.CryptoApiException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,21 +19,19 @@ import java.util.stream.Collectors;
  * @author beichenhpy
  * <p> 2022/7/7 20:31
  */
+@RequiredArgsConstructor
 @Component
 public class CryptoApiHelper {
-
-    @Resource
-    private CryptoApiProperties cryptoApiProperties;
 
     /**
      * 普通path对应ak的缓存
      */
-    private static final Map<String, String> COMMON_PATH_CACHE = new LinkedHashMap<>();
+    private static final Map<String, String> COMMON_PATH_CACHE = new LinkedHashMap<>(256);
 
     /**
      * 通配path对应ak的缓存
      */
-    private static final Map<String, String> WILDCARD_PATH_CACHE = new LinkedHashMap<>();
+    private static final Map<String, String> WILDCARD_PATH_CACHE = new LinkedHashMap<>(256);
 
     /**
      * 通配符
@@ -45,8 +43,13 @@ public class CryptoApiHelper {
      */
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
+    /**
+     * config inject
+     */
+    private final CryptoApiProperties cryptoApiProperties;
+
     @PostConstruct
-    public void initCache() {
+    public synchronized void initCache() {
         Map<String, CryptoApiProperties.CryptoPath> cryptoApis = cryptoApiProperties.getApis();
         if (cryptoApis.isEmpty()) {
             return;
