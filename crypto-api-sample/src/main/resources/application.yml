@@ -2,6 +2,9 @@ crypto-api:
   apis:
     demo1:
       paths:
-        - /demo/*
+        - /demo/*/test
+      aes-key: f5d830d77163a58f
+    demo2:
+      paths:
         - /demo/query
-      aesKey: f5d830d77163a58f
+      aes-key: f5d830d77163a581

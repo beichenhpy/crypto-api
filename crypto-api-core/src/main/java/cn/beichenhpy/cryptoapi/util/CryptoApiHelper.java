@@ -3,6 +3,7 @@ package cn.beichenhpy.cryptoapi.util;
 import cn.beichenhpy.cryptoapi.exception.CryptoApiException;
 import cn.beichenhpy.cryptoapi.config.CryptoApiProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -30,8 +31,7 @@ public class CryptoApiHelper {
     private static final Map<String, String> COMMON_PATH_CACHE = new LinkedHashMap<>();
 
     /**
-     * 通配path对应ak的缓存 <br>
-     * 通配类型url指 /demo/** /demo1/* 以*号结尾的
+     * 通配path对应ak的缓存
      */
     private static final Map<String, String> WILDCARD_PATH_CACHE = new LinkedHashMap<>();
 
@@ -39,6 +39,11 @@ public class CryptoApiHelper {
      * 通配符
      */
     private static final String WILDCARD = "*";
+
+    /**
+     * 路径匹配
+     */
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     @PostConstruct
     public void initCache() {
@@ -56,7 +61,7 @@ public class CryptoApiHelper {
                     .filter(this::isWildcard)
                     .collect(Collectors.toList());
             for (String wildcardPath : wildcardPathSet) {
-                WILDCARD_PATH_CACHE.put(getPathWithoutWildcard(wildcardPath), aesKey);
+                WILDCARD_PATH_CACHE.put(wildcardPath, aesKey);
             }
             //移除通配路径
             paths.removeIf(this::isWildcard);
@@ -78,26 +83,9 @@ public class CryptoApiHelper {
      * @return 是返回true 否则返回false
      */
     private boolean isWildcard(String path) {
-        return path.endsWith(WILDCARD);
+        return path.contains(WILDCARD);
     }
 
-    /**
-     * 清理通配符的path
-     *
-     * @param path 原始路径
-     * @return 返回去掉末尾的 * 和 /的
-     */
-    private String getPathWithoutWildcard(String path) {
-        //首先去除结尾的 *
-        while (path.lastIndexOf(WILDCARD) != -1) {
-            path = path.substring(0, path.lastIndexOf(WILDCARD));
-        }
-        //然后去除 多余的 /
-        while (path.lastIndexOf("/") == path.length() - 1) {
-            path = path.substring(0, path.lastIndexOf("/"));
-        }
-        return path;
-    }
 
     /**
      * 根据访问路径找到对应的aesKey
@@ -113,7 +101,7 @@ public class CryptoApiHelper {
         }
         //不存在，再匹配通配
         for (Map.Entry<String, String> entry : WILDCARD_PATH_CACHE.entrySet()) {
-            if (path.startsWith(entry.getKey())) {
+            if (antPathMatcher.match(entry.getKey(), path)) {
                 ak = entry.getValue();
                 break;
             }

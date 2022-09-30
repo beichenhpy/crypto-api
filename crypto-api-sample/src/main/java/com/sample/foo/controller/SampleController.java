@@ -40,13 +40,13 @@ public class SampleController {
     @Resource
     private ObjectMapper objectMapper;
 
-    @GetMapping("user")
+    @GetMapping("user/test")
     public void test1(User user) {
         log.info("user: {}", user);
     }
 
 
-    @PostMapping("/query")
+    @GetMapping("/query")
     public Result<User> query(@RequestBody(required = false) User user) throws Exception {
         User result = new User();
         result.setBirthday(LocalDateTime.of(1997, 6, 24, 0, 0, 0));
