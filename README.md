@@ -18,10 +18,18 @@ Spring boot Api接口，请求参数解密，请求结果加密例子
 2. 支持通配符 如demo2的 `/demo/*`
 ```yaml
 crypto-api:
-  apis:
-    demo1:
-      paths:
-        - /demo/*
-        - /demo/query
-      aesKey: f5d830d77163a58f
+  encrypt:
+    enable: true
+    apis:
+      demo1:
+        paths:
+          - /demo/*/test
+        aes-key: f5d830d77163a58f
+  decrypt:
+    enable: true
+    apis:
+      demo1:
+        paths:
+          - /demo/test
+        aes-key: f5d830d77163a58f
 ```
