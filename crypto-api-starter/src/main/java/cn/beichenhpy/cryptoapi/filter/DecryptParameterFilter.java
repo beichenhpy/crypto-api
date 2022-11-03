@@ -13,6 +13,8 @@
 
 package cn.beichenhpy.cryptoapi.filter;
 
+import cn.beichenhpy.cryptoapi.CryptoApi;
+import cn.beichenhpy.cryptoapi.CryptoType;
 import cn.beichenhpy.cryptoapi.util.CryptoApiHelper;
 import cn.beichenhpy.cryptoapi.web.DecryptRequestParamsWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -34,19 +36,25 @@ import java.io.IOException;
  * <p> 2022/5/2 19:54
  */
 @Slf4j
-public class DecryptParameterFilter extends OncePerRequestFilter {
+public class DecryptParameterFilter extends OncePerRequestFilter implements CryptoApi {
+
 
     @Resource
     private CryptoApiHelper cryptoApiHelper;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return cryptoApiHelper.getAesKeyByPath(request.getServletPath()) == null;
+        return cryptoApiHelper.getAesKeyOrNull(request.getServletPath(), cryptoType()) == null;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        request = new DecryptRequestParamsWrapper(request, cryptoApiHelper.getAesKeyByPath(request.getServletPath()));
+        request = new DecryptRequestParamsWrapper(request, cryptoApiHelper.getAesKeyOrNull(request.getServletPath(), cryptoType()));
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    public CryptoType cryptoType() {
+        return CryptoType.DECRYPT;
     }
 }

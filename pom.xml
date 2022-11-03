@@ -6,7 +6,6 @@
     <modules>
         <module>crypto-api-sample</module>
         <module>crypto-api-starter</module>
-        <module>crypto-api-core</module>
     </modules>
 
     <groupId>cn.beichenhpy</groupId>
@@ -67,11 +66,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-json</artifactId>
                 <version>${spring-boot.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.beichenhpy</groupId>
-                <artifactId>crypto-api-core</artifactId>
-                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.beichenhpy</groupId>

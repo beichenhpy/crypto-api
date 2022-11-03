@@ -1,10 +1,15 @@
 crypto-api:
-  apis:
-    demo1:
-      paths:
-        - /demo/*/test
-      aes-key: f5d830d77163a58f
-    demo2:
-      paths:
-        - /demo/query
-      aes-key: f5d830d77163a581
+  encrypt:
+    enable: true
+    apis:
+      demo1:
+        paths:
+          - /demo/*/test
+        aes-key: f5d830d77163a58f
+  decrypt:
+    enable: true
+    apis:
+      demo1:
+        paths:
+          - /demo/test
+        aes-key: f5d830d77163a58f

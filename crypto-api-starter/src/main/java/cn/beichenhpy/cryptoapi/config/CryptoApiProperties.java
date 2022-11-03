@@ -13,11 +13,8 @@
 
 package cn.beichenhpy.cryptoapi.config;
 
-import cn.beichenhpy.cryptoapi.util.CryptoApiHelper;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -26,43 +23,81 @@ import java.util.Map;
 
 /**
  * <pre>
- *  crypto-api:
- *   apis:
- *     demo1:
- *       paths:
- *         - /demo/*
- *         - /demo/query
- *       aesKey: f5d830d77163a58f
+ * crypto-api:
+ *   encrypt:
+ *     enable: true
+ *     apis:
+ *       demo1:
+ *         paths:
+ *           - /demo/<b>*</b>/test
+ *         aes-key: f5d830d77163a58f
+ *   decrypt:
+ *     enable: true
+ *     apis:
+ *       demo1:
+ *         paths:
+ *           - /demo/test
+ *         aes-key: f5d830d77163a58f
  * </pre>
  *
  * @author beichenhpy
  * <p> 2022/5/2 21:03
  */
 @Data
-@Configuration
 @ConfigurationProperties(prefix = "crypto-api")
 public class CryptoApiProperties {
 
 
-    private Map<String, CryptoPath> apis = new LinkedHashMap<>();
+    /**
+     * 加密
+     */
+    private EncryptApi encrypt;
 
+    /**
+     * 解密
+     */
+    private DecryptApi decrypt;
+
+
+    @Data
+    public static class EncryptApi {
+
+        /**
+         * 是否启用
+         */
+        private boolean enable = true;
+
+        /**
+         * aesKey及请求路径
+         */
+        private Map<String, CryptoPath> apis = new LinkedHashMap<>();
+    }
+
+    @Data
+    public static class DecryptApi {
+        /**
+         * 是否启用
+         */
+        private boolean enable = true;
+
+        /**
+         * aesKey及请求路径
+         */
+        private Map<String, CryptoPath> apis = new LinkedHashMap<>();
+    }
 
     @Data
     public static class CryptoPath {
 
+        /**
+         * aes加解密的key
+         */
         private String aesKey;
 
+        /**
+         * 对应的请求路径 支持*通配符
+         */
         private List<String> paths = new ArrayList<>();
     }
 
-
-    @Bean
-    public CryptoApiProperties cryptoApiProperties() {
-        return new CryptoApiProperties();
-    }
-
-    @Bean
-    public CryptoApiHelper cryptoApiHelper() {
-        return new CryptoApiHelper(cryptoApiProperties());
-    }
 }

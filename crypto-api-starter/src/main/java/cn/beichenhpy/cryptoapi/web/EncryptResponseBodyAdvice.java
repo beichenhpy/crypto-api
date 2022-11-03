@@ -13,6 +13,8 @@
 
 package cn.beichenhpy.cryptoapi.web;
 
+import cn.beichenhpy.cryptoapi.CryptoApi;
+import cn.beichenhpy.cryptoapi.CryptoType;
 import cn.beichenhpy.cryptoapi.util.AES;
 import cn.beichenhpy.cryptoapi.util.CryptoApiHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +40,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @ControllerAdvice
-public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
+public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T>, CryptoApi {
+
 
     @Resource
     private ObjectMapper objectMapper;
@@ -51,13 +54,13 @@ public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiHelper.getAesKeyByPath(request.getServletPath()) != null;
+        return cryptoApiHelper.getAesKeyOrNull(request.getServletPath(), cryptoType()) != null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse response) {
-        String aesKey = cryptoApiHelper.getAesKeyByPath(request.getServletPath());
+        String aesKey = cryptoApiHelper.getAesKeyOrNull(request.getServletPath(), cryptoType());
         if (body != null) {
             try {
                 return (T) AES.encrypt(objectMapper.writeValueAsString(body), aesKey);
@@ -69,4 +72,8 @@ public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
     }
 
 
+    @Override
+    public CryptoType cryptoType() {
+        return CryptoType.ENCRYPT;
+    }
 }

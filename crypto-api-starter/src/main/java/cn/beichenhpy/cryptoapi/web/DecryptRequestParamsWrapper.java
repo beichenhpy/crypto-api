@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -37,7 +37,7 @@ public class DecryptRequestParamsWrapper extends HttpServletRequestWrapper {
 
     private final String aesKey;
 
-    private final Map<String, String[]> decryptParameters = new HashMap<>();
+    private final Map<String, String[]> decryptParameters = new LinkedHashMap<>();
 
     public DecryptRequestParamsWrapper(HttpServletRequest request, String aesKey) {
         super(request);

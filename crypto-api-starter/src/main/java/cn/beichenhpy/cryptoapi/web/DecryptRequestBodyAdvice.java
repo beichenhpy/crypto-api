@@ -13,6 +13,8 @@
 
 package cn.beichenhpy.cryptoapi.web;
 
+import cn.beichenhpy.cryptoapi.CryptoApi;
+import cn.beichenhpy.cryptoapi.CryptoType;
 import cn.beichenhpy.cryptoapi.util.AES;
 import cn.beichenhpy.cryptoapi.util.CryptoApiHelper;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +44,8 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @ControllerAdvice
-public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
+public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter implements CryptoApi {
+
 
     @Resource
     private CryptoApiHelper cryptoApiHelper;
@@ -52,13 +55,13 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiHelper.getAesKeyByPath(request.getServletPath()) != null;
+        return cryptoApiHelper.getAesKeyOrNull(request.getServletPath(), cryptoType()) != null;
     }
 
     @Override
     public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
         InputStream body = inputMessage.getBody();
-        String aesKey = cryptoApiHelper.getAesKeyByPath(request.getServletPath());
+        String aesKey = cryptoApiHelper.getAesKeyOrNull(request.getServletPath(), cryptoType());
         //copy stream
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[8024];
@@ -83,5 +86,10 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
             log.error("AES KEY: {}, 参数解密失败: {}, {}", aesKey, e.getMessage(), e);
         }
         return super.beforeBodyRead(inputMessage, parameter, targetType, converterType);
+    }
+
+    @Override
+    public CryptoType cryptoType() {
+        return CryptoType.DECRYPT;
     }
 }
