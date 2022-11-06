@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author beichenhpy
@@ -61,25 +59,6 @@ public class AesDecryptRequestHandler extends AbstractDecryptHandler {
             byteArrayOutputStream.close();
         }
         return inputMessage;
-    }
-
-    @Override
-    public Map<String, String[]> decryptRequestParam(HttpServletRequest request) {
-        String aesKey = aesCryptoHelper.getAesKey(request.getServletPath(), CryptoType.DECRYPT);
-        Map<String, String[]> decryptParameters = new LinkedHashMap<>(request.getParameterMap());
-        for (Map.Entry<String, String[]> entry : decryptParameters.entrySet()) {
-            String[] values = entry.getValue();
-            for (int i = 0; i < values.length; i++) {
-                try {
-                    values[i] = AES.decrypt(values[i], aesKey);
-                } catch (Exception e) {
-                    //do nothing
-                    log.error("AES KEY: {}, 参数解密失败: {}, {}", aesKey, e.getMessage(), e);
-                }
-            }
-            decryptParameters.put(entry.getKey(), values);
-        }
-        return decryptParameters;
     }
 
     @Override

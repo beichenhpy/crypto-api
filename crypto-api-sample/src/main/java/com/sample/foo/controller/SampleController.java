@@ -13,6 +13,8 @@
 
 package com.sample.foo.controller;
 
+import cn.beichenhpy.cryptoapi.DecryptApi;
+import cn.beichenhpy.cryptoapi.EncryptApi;
 import com.sample.foo.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <pre>
@@ -51,14 +55,14 @@ public class SampleController {
      * </pre>
      * @return 返回加密后的用户信息
      */
+    @EncryptApi(handler = "AES")
     @GetMapping("/encrypt/user")
-    public User encryptUser() {
-        return new User("韩鹏宇", LocalDateTime.of(LocalDate.of(1997, 6, 24), LocalTime.of(6, 10 ,23)), 25, BigDecimal.valueOf(70000L));
-    }
-
-    @GetMapping("/decrypt/param")
-    public void decryptParam(String username, Integer age) {
-        log.info("username : {}, age: {}", username, age);
+    public List<User> encryptUser() {
+        List<User> users = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            users.add(new User("韩鹏宇 | " + i, LocalDateTime.of(LocalDate.of(1997, 6, 24), LocalTime.of(6, 10, 23)), 25, BigDecimal.valueOf(70000L)));
+        }
+        return users;
     }
 
     /**
@@ -75,8 +79,10 @@ public class SampleController {
      * </pre>
      * @param decryptUser 解密后的用户信息
      */
+    @DecryptApi(handler = "AES")
     @GetMapping("/decrypt/user")
-    public void decryptUser(@RequestBody User decryptUser) {
+    public void decryptUser(@RequestBody List<User> decryptUser) {
         log.info("decrypt user : {}", decryptUser);
     }
+
 }

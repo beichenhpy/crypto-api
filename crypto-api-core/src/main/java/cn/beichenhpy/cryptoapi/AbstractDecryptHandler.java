@@ -25,6 +25,4 @@ public abstract class AbstractDecryptHandler implements CryptoHandler {
     }
 
     public abstract HttpInputMessage decryptRequestBody(HttpServletRequest request, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException;
-
-    public abstract Map<String, String[]> decryptRequestParam(HttpServletRequest request);
 }

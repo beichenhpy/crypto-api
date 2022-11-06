@@ -14,7 +14,7 @@
 package cn.beichenhpy.cryptoapi.web;
 
 import cn.beichenhpy.cryptoapi.CryptoApiHelper;
-import cn.beichenhpy.cryptoapi.CryptoType;
+import cn.beichenhpy.cryptoapi.EncryptApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * <pre>
@@ -38,23 +37,22 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @ControllerAdvice
 public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
-
-    @Resource
-    private HttpServletRequest request;
-
     @Resource
     private CryptoApiHelper cryptoApiHelper;
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiHelper.getHandlerKeyOrNull(request.getServletPath(), CryptoType.ENCRYPT) != null;
+        return returnType.getMethodAnnotation(EncryptApi.class) != null;
     }
 
 
     @Override
     public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse response) {
         if (body != null) {
-            body = cryptoApiHelper.getEncryptHandler(request.getServletPath()).encrypt(body, returnType, selectedContentType, selectedConverterType, serverHttpRequest, response);
+            EncryptApi encryptApi = returnType.getMethodAnnotation(EncryptApi.class);
+            if (encryptApi != null) {
+                body = cryptoApiHelper.getEncryptHandler(encryptApi.handler()).encrypt(body, returnType, selectedContentType, selectedConverterType, serverHttpRequest, response);
+            }
         }
         return body;
     }

@@ -15,7 +15,7 @@ package cn.beichenhpy.cryptoapi.web;
 
 import cn.beichenhpy.cryptoapi.AbstractDecryptHandler;
 import cn.beichenhpy.cryptoapi.CryptoApiHelper;
-import cn.beichenhpy.cryptoapi.CryptoType;
+import cn.beichenhpy.cryptoapi.DecryptApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
@@ -49,13 +49,17 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiHelper.getHandlerKeyOrNull(request.getServletPath(), CryptoType.DECRYPT) != null;
+        return methodParameter.getMethodAnnotation(DecryptApi.class) != null;
     }
 
     @Override
     public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
-        AbstractDecryptHandler decryptHandler = cryptoApiHelper.getDecryptHandler(request.getServletPath());
-        inputMessage = decryptHandler.decryptRequestBody(request, inputMessage, parameter, targetType, converterType);
-        return super.beforeBodyRead(inputMessage, parameter, targetType, converterType);
+        DecryptApi methodAnnotation = parameter.getMethodAnnotation(DecryptApi.class);
+        if (methodAnnotation != null) {
+            AbstractDecryptHandler decryptHandler = cryptoApiHelper.getDecryptHandler(methodAnnotation.handler());
+            inputMessage = decryptHandler.decryptRequestBody(request, inputMessage, parameter, targetType, converterType);
+            return super.beforeBodyRead(inputMessage, parameter, targetType, converterType);
+        }
+        return inputMessage;
     }
 }
