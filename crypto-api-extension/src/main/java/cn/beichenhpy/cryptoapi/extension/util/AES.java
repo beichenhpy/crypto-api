@@ -10,15 +10,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.beichenhpy.cryptoapi.util;
+package cn.beichenhpy.cryptoapi.extension.util;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * AES CBC模式加密工具类
@@ -95,21 +93,5 @@ public class AES {
         byte[] originalData = Base64.getDecoder().decode(data.getBytes());
         byte[] valueByte = decrypt(originalData, key.getBytes(StandardCharsets.UTF_8));
         return new String(valueByte);
-    }
-
-    /**
-     * 生成一个随机字符串密钥
-     */
-    public static String generateRandomKey() {
-        return get32UUID().substring(0, 16);
-    }
-
-
-    /**
-     * 使用ThreadLocalRandom获取UUID获取更优的效果 去掉"-"
-     */
-    public static String get32UUID() {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        return new UUID(random.nextLong(), random.nextLong()).toString().replace("-", "");
     }
 }

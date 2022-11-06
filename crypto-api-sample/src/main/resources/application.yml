@@ -2,14 +2,30 @@ crypto-api:
   encrypt:
     enable: true
     apis:
-      demo1:
+      user:
+        handler-key: AES
         paths:
-          - /demo/*/test
-        aes-key: f5d830d77163a58f
+          - /demo/encrypt/*
   decrypt:
     enable: true
     apis:
-      demo1:
+      user:
+        handler-key: AES
         paths:
-          - /demo/test
-        aes-key: f5d830d77163a58f
+          - /demo/decrypt/*
+  extension:
+    aes:
+      encrypt:
+        enable: true
+        apis:
+          user:
+            aes-key: f5d830d77163a58f
+            paths:
+              - /demo/encrypt/*
+      decrypt:
+        enable: true
+        apis:
+          user:
+            aes-key: f5d830d77163a58f
+            paths:
+              - /demo/decrypt/*

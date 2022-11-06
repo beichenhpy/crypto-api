@@ -55,7 +55,7 @@ public class DecryptRequestBodyAdvice extends RequestBodyAdviceAdapter {
     @Override
     public HttpInputMessage beforeBodyRead(HttpInputMessage inputMessage, MethodParameter parameter, Type targetType, Class<? extends HttpMessageConverter<?>> converterType) throws IOException {
         AbstractDecryptHandler decryptHandler = cryptoApiHelper.getDecryptHandler(request.getServletPath());
-        inputMessage = decryptHandler.decryptRequestBody(inputMessage, parameter, targetType, converterType);
+        inputMessage = decryptHandler.decryptRequestBody(request, inputMessage, parameter, targetType, converterType);
         return super.beforeBodyRead(inputMessage, parameter, targetType, converterType);
     }
 }

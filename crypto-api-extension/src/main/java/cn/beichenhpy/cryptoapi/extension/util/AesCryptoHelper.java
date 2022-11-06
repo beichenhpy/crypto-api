@@ -1,7 +1,8 @@
-package cn.beichenhpy.cryptoapi;
+package cn.beichenhpy.cryptoapi.extension.util;
 
-import cn.beichenhpy.cryptoapi.config.CryptoApiProperties;
+import cn.beichenhpy.cryptoapi.CryptoType;
 import cn.beichenhpy.cryptoapi.exception.CryptoApiException;
+import cn.beichenhpy.cryptoapi.extension.aes.config.AesCryptoApiProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.AntPathMatcher;
@@ -14,14 +15,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 加密解密api工具类，用于获取servletPath对应的handlerKey
- *
  * @author beichenhpy
- * <p> 2022/7/7 20:31
+ * <p> 2022/11/6 16:36
  */
 @Slf4j
 @RequiredArgsConstructor
-public class CryptoApiHelper {
+public class AesCryptoHelper {
 
     /**
      * 普通path对应ak的缓存 encrypt时
@@ -55,51 +54,51 @@ public class CryptoApiHelper {
     /**
      * config inject
      */
-    private final CryptoApiProperties cryptoApiProperties;
+    private final AesCryptoApiProperties aesCryptoApiProperties;
 
     @PostConstruct
     public synchronized void initCache() {
         //encrypt
-        CryptoApiProperties.EncryptApi encrypt = cryptoApiProperties.getEncrypt();
+        AesCryptoApiProperties.EncryptApi encrypt = aesCryptoApiProperties.getEncrypt();
         if (encrypt != null && encrypt.isEnable()) {
             //load encrypt apis
             doInitPath(encrypt.getApis(), COMMON_ENCRYPT_PATH_CACHE, WILDCARD_ENCRYPT_PATH_CACHE);
-            log.info("crypto-api-init-encrypt-finish : common: {}, wildcard: {}", COMMON_ENCRYPT_PATH_CACHE, WILDCARD_ENCRYPT_PATH_CACHE);
+            log.info("[AES-EXTENSION]-crypto-api-init-encrypt-finish : common: {}, wildcard: {}", COMMON_ENCRYPT_PATH_CACHE, WILDCARD_ENCRYPT_PATH_CACHE);
         }
         //decrypt
-        CryptoApiProperties.DecryptApi decrypt = cryptoApiProperties.getDecrypt();
+        AesCryptoApiProperties.DecryptApi decrypt = aesCryptoApiProperties.getDecrypt();
         if (decrypt != null && decrypt.isEnable()) {
             //load encrypt apis
             doInitPath(decrypt.getApis(), COMMON_DECRYPT_PATH_CACHE, WILDCARD_DECRYPT_PATH_CACHE);
-            log.info("crypto-api-init-decrypt-finish : common: {}, wildcard: {}", COMMON_DECRYPT_PATH_CACHE, WILDCARD_DECRYPT_PATH_CACHE);
+            log.info("[AES-EXTENSION]-crypto-api-init-decrypt-finish : common: {}, wildcard: {}", COMMON_DECRYPT_PATH_CACHE, WILDCARD_DECRYPT_PATH_CACHE);
         }
     }
 
 
-    private void doInitPath(Map<String, CryptoApiProperties.CryptoPath> cryptoApis, Map<String, String> commonPathCache, Map<String, String> wildcardPathCache) {
+    private void doInitPath(Map<String, AesCryptoApiProperties.CryptoPath> cryptoApis, Map<String, String> commonPathCache, Map<String, String> wildcardPathCache) {
         if (cryptoApis.isEmpty()) {
             return;
         }
         commonPathCache.clear();
         wildcardPathCache.clear();
-        for (Map.Entry<String, CryptoApiProperties.CryptoPath> entry : cryptoApis.entrySet()) {
-            CryptoApiProperties.CryptoPath cryptoPath = entry.getValue();
+        for (Map.Entry<String, AesCryptoApiProperties.CryptoPath> entry : cryptoApis.entrySet()) {
+            AesCryptoApiProperties.CryptoPath cryptoPath = entry.getValue();
             List<String> paths = cryptoPath.getPaths();
-            String handlerKey = cryptoPath.getHandlerKey();
+            String aesKey = cryptoPath.getAesKey();
             List<String> wildcardPathSet = paths.stream()
                     .filter(this::isWildcard)
                     .collect(Collectors.toList());
             for (String wildcardPath : wildcardPathSet) {
-                wildcardPathCache.put(wildcardPath, handlerKey);
+                wildcardPathCache.put(wildcardPath, aesKey);
             }
             //移除通配路径
             paths.removeIf(this::isWildcard);
             if (!paths.isEmpty()) {
-                if (!StringUtils.hasText(handlerKey)) {
-                    throw new CryptoApiException("paths: [" + paths + " ]未填写对应handlerKey");
+                if (!StringUtils.hasText(aesKey)) {
+                    throw new CryptoApiException("paths: [" + paths + " ]未填写对应aesKey");
                 }
                 for (String path : paths) {
-                    commonPathCache.put(path, handlerKey);
+                    commonPathCache.put(path, aesKey);
                 }
             }
         }
@@ -115,62 +114,50 @@ public class CryptoApiHelper {
         return path.contains(WILDCARD);
     }
 
-
     /**
-     * 区分加密还是解密并且根据访问路径找到对应的handlerKey
+     * 区分加密还是解密并且根据访问路径找到对应的aesKey
      *
      * @param path       访问路径
      * @param cryptoType 加密/解密类型
      * @return 返回aesKey
      */
-    public String getHandlerKeyOrNull(String path, CryptoType cryptoType) {
+    public String getAesKey(String path, CryptoType cryptoType) {
+        String aesKey = null;
         switch (cryptoType) {
             case DECRYPT:
-                return doGetHandlerKeyOrNull(path, COMMON_DECRYPT_PATH_CACHE, WILDCARD_DECRYPT_PATH_CACHE);
+                aesKey = doGetAesKey(path, COMMON_DECRYPT_PATH_CACHE, WILDCARD_DECRYPT_PATH_CACHE);
+                break;
             case ENCRYPT:
-                return doGetHandlerKeyOrNull(path, COMMON_ENCRYPT_PATH_CACHE, WILDCARD_ENCRYPT_PATH_CACHE);
+                aesKey = doGetAesKey(path, COMMON_ENCRYPT_PATH_CACHE, WILDCARD_ENCRYPT_PATH_CACHE);
+                break;
         }
-        return null;
+        if (aesKey == null) {
+            throw new CryptoApiException("this path " + path + " has not define aes key");
+        }
+        return aesKey;
     }
 
     /**
-     * 根据访问路径找到对应的handlerKey
+     * 根据访问路径找到对应的aesKey
      *
      * @param path              请求路径
      * @param commonPathCache   普通的路径缓存
      * @param wildcardPathCache 通配路径缓存
-     * @return 返回对应的handlerKey，没有返回null
+     * @return 返回对应的aesKey，没有返回null
      */
-    private String doGetHandlerKeyOrNull(String path, Map<String, String> commonPathCache, Map<String, String> wildcardPathCache) {
+    private String doGetAesKey(String path, Map<String, String> commonPathCache, Map<String, String> wildcardPathCache) {
         //先判断是否满足普通的链接
-        String handlerKey = commonPathCache.get(path);
-        if (StringUtils.hasText(handlerKey)) {
-            return handlerKey;
+        String encryptAesKey = commonPathCache.get(path);
+        if (StringUtils.hasText(encryptAesKey)) {
+            return encryptAesKey;
         }
         //不存在，再匹配通配
         for (Map.Entry<String, String> entry : wildcardPathCache.entrySet()) {
             if (antPathMatcher.match(entry.getKey(), path)) {
-                handlerKey = entry.getValue();
+                encryptAesKey = entry.getValue();
                 break;
             }
         }
-        return handlerKey;
-    }
-
-
-    public AbstractDecryptHandler getDecryptHandler(String path) {
-        AbstractDecryptHandler handler = AbstractDecryptHandler.DECRYPT_KEY_AND_HANDLERS.get(getHandlerKeyOrNull(path, CryptoType.DECRYPT));
-        if (handler == null) {
-            throw new CryptoApiException("this path " + path + " has not handler for decrypt");
-        }
-        return handler;
-    }
-
-    public AbstractEncryptHandler getEncryptHandler(String path) {
-        AbstractEncryptHandler handler = AbstractEncryptHandler.ENCRYPT_KEY_AND_HANDLERS.get(getHandlerKeyOrNull(path, CryptoType.ENCRYPT));
-        if (handler == null) {
-            throw new CryptoApiException("this path " + path + " has not handler for encrypt");
-        }
-        return handler;
+        return encryptAesKey;
     }
 }

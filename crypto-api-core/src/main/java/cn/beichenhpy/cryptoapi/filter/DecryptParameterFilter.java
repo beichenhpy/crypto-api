@@ -37,7 +37,6 @@ import java.io.IOException;
 @Slf4j
 public class DecryptParameterFilter extends OncePerRequestFilter {
 
-
     @Resource
     private CryptoApiHelper cryptoApiHelper;
 

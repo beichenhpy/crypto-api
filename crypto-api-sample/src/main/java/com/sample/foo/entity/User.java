@@ -14,8 +14,9 @@
 package com.sample.foo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
@@ -29,7 +30,8 @@ import java.time.LocalDateTime;
  * @author beichenhpy
  * <p> 2022/5/2 19:58
  */
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class User {
 

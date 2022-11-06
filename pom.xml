@@ -6,6 +6,8 @@
     <modules>
         <module>crypto-api-sample</module>
         <module>crypto-api-core</module>
+        <module>crypto-api-extension</module>
+        <module>crypto-api-starter</module>
     </modules>
 
     <groupId>cn.beichenhpy</groupId>
@@ -44,7 +46,6 @@
                 <groupId>javax.servlet</groupId>
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${javax-servlet.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -70,6 +71,16 @@
             <dependency>
                 <groupId>cn.beichenhpy</groupId>
                 <artifactId>crypto-api-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.beichenhpy</groupId>
+                <artifactId>crypto-api-extension</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.beichenhpy</groupId>
+                <artifactId>crypto-api-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

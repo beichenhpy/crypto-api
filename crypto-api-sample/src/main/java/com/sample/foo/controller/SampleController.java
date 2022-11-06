@@ -13,16 +13,17 @@
 
 package com.sample.foo.controller;
 
-import cn.beichenhpy.cryptoapi.util.AES;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sample.foo.entity.User;
-import com.sample.foo.modal.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 /**
  * <pre>
@@ -37,24 +38,45 @@ import java.time.LocalDateTime;
 @RequestMapping("/demo")
 public class SampleController {
 
-    @Resource
-    private ObjectMapper objectMapper;
-
-    @GetMapping("user/test")
-    public void test1(User user) {
-        log.info("user: {}", user);
+    /**
+     * <pre>
+     *      OkHttpClient client = new OkHttpClient().newBuilder().build();
+     *      MediaType mediaType = MediaType.parse("text/plain");
+     *      RequestBody body = RequestBody.create(mediaType, "");
+     *      Request request = new Request.Builder()
+     *        .url("http://localhost:8080/demo/encrypt/user")
+     *        .method("GET", body)
+     *        .build();
+     *      Response response = client.newCall(request).execute();
+     * </pre>
+     * @return 返回加密后的用户信息
+     */
+    @GetMapping("/encrypt/user")
+    public User encryptUser() {
+        return new User("韩鹏宇", LocalDateTime.of(LocalDate.of(1997, 6, 24), LocalTime.of(6, 10 ,23)), 25, BigDecimal.valueOf(70000L));
     }
 
+    @GetMapping("/decrypt/param")
+    public void decryptParam(String username, Integer age) {
+        log.info("username : {}, age: {}", username, age);
+    }
 
-    @GetMapping("/query")
-    public Result<User> query(@RequestBody(required = false) User user) throws Exception {
-        User result = new User();
-        result.setBirthday(LocalDateTime.of(1997, 6, 24, 0, 0, 0));
-        result.setAge(24);
-        result.setMoney(new BigDecimal("65000.22"));
-        result.setUsername("韩鹏宇");
-        log.info("user: {}", user);
-        log.info("encrypt user: {}", AES.encrypt(objectMapper.writeValueAsString(result), "f5d830d77163a58f"));
-        return Result.ok(result);
+    /**
+     * <pre>
+     *      OkHttpClient client = new OkHttpClient().newBuilder().build();
+     *      MediaType mediaType = MediaType.parse("application/json");
+     *      RequestBody body = RequestBody.create(mediaType, "iMB9/BQ6EvzT8hlZHlAlIlorXjb4/0NRnW6WWu70Z8iqrPAOVxR3FxxxxjE93koNKUcwgU2VCJ6dW+HWmpxw9n9FZhtT4H6bctuF3ew7FlmQGiH5TYGQN91rDeD0wN3P");
+     *      Request request = new Request.Builder()
+     *          .url("http://localhost:8080/demo/decrypt/user")
+     *          .method("GET", body)
+     *          .addHeader("Content-Type", "application/json")
+     *          .build();
+     *      Response response = client.newCall(request).execute();
+     * </pre>
+     * @param decryptUser 解密后的用户信息
+     */
+    @GetMapping("/decrypt/user")
+    public void decryptUser(@RequestBody User decryptUser) {
+        log.info("decrypt user : {}", decryptUser);
     }
 }
