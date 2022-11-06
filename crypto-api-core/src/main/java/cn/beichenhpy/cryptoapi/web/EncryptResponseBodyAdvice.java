@@ -13,11 +13,8 @@
 
 package cn.beichenhpy.cryptoapi.web;
 
-import cn.beichenhpy.cryptoapi.CryptoApi;
+import cn.beichenhpy.cryptoapi.CryptoApiHelper;
 import cn.beichenhpy.cryptoapi.CryptoType;
-import cn.beichenhpy.cryptoapi.util.AES;
-import cn.beichenhpy.cryptoapi.util.CryptoApiHelper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -40,11 +37,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @ControllerAdvice
-public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T>, CryptoApi {
-
-
-    @Resource
-    private ObjectMapper objectMapper;
+public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T> {
 
     @Resource
     private HttpServletRequest request;
@@ -54,26 +47,16 @@ public class EncryptResponseBodyAdvice<T> implements ResponseBodyAdvice<T>, Cryp
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return cryptoApiHelper.getAesKeyOrNull(request.getServletPath(), cryptoType()) != null;
+        return cryptoApiHelper.getHandlerKeyOrNull(request.getServletPath(), CryptoType.ENCRYPT) != null;
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
     public T beforeBodyWrite(T body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse response) {
-        String aesKey = cryptoApiHelper.getAesKeyOrNull(request.getServletPath(), cryptoType());
         if (body != null) {
-            try {
-                return (T) AES.encrypt(objectMapper.writeValueAsString(body), aesKey);
-            } catch (Exception e) {
-                log.error("AES KEY: {}, 返回值加密失败: {}, {}", aesKey, e.getMessage(), e);
-            }
+            body = cryptoApiHelper.getEncryptHandler(request.getServletPath()).encrypt(body, returnType, selectedContentType, selectedConverterType, serverHttpRequest, response);
         }
         return body;
     }
 
-
-    @Override
-    public CryptoType cryptoType() {
-        return CryptoType.ENCRYPT;
-    }
 }

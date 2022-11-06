@@ -13,8 +13,7 @@
 
 package cn.beichenhpy.cryptoapi.web;
 
-import cn.beichenhpy.cryptoapi.util.AES;
-import lombok.SneakyThrows;
+import cn.beichenhpy.cryptoapi.AbstractDecryptHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,26 +34,11 @@ import java.util.Map;
 @Slf4j
 public class DecryptRequestParamsWrapper extends HttpServletRequestWrapper {
 
-    private final String aesKey;
-
     private final Map<String, String[]> decryptParameters = new LinkedHashMap<>();
 
-    public DecryptRequestParamsWrapper(HttpServletRequest request, String aesKey) {
+    public DecryptRequestParamsWrapper(HttpServletRequest request, AbstractDecryptHandler decryptHandler) {
         super(request);
-        this.aesKey = aesKey;
-        this.decryptParameters.putAll(request.getParameterMap());
-        for (Map.Entry<String, String[]> entry : decryptParameters.entrySet()) {
-            String[] values = entry.getValue();
-            for (int i = 0; i < values.length; i++) {
-                try {
-                    values[i] = decrypt(values[i]);
-                } catch (Exception e) {
-                    //do nothing
-                    log.error("AES KEY: {}, 参数解密失败: {}, {}", aesKey, e.getMessage(), e);
-                }
-            }
-            decryptParameters.put(entry.getKey(), values);
-        }
+        this.decryptParameters.putAll(decryptHandler.decryptRequestParam(request));
     }
 
     @Override
@@ -79,13 +63,5 @@ public class DecryptRequestParamsWrapper extends HttpServletRequestWrapper {
     @Override
     public String[] getParameterValues(String name) {
         return decryptParameters.get(name);
-    }
-
-    @SneakyThrows
-    private String decrypt(String param) {
-        if (aesKey == null) {
-            throw new Exception("aes Key 不存在");
-        }
-        return AES.decrypt(param, aesKey);
     }
 }

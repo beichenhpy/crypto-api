@@ -1,7 +1,7 @@
 package cn.beichenhpy.cryptoapi.config;
 
+import cn.beichenhpy.cryptoapi.CryptoApiHelper;
 import cn.beichenhpy.cryptoapi.filter.DecryptParameterFilter;
-import cn.beichenhpy.cryptoapi.util.CryptoApiHelper;
 import cn.beichenhpy.cryptoapi.web.DecryptRequestBodyAdvice;
 import cn.beichenhpy.cryptoapi.web.EncryptResponseBodyAdvice;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;

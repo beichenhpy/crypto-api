@@ -22,23 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <pre>
- * crypto-api:
- *   encrypt:
- *     enable: true
- *     apis:
- *       demo1:
- *         paths:
- *           - /demo/<b>*</b>/test
- *         aes-key: f5d830d77163a58f
- *   decrypt:
- *     enable: true
- *     apis:
- *       demo1:
- *         paths:
- *           - /demo/test
- *         aes-key: f5d830d77163a58f
- * </pre>
  *
  * @author beichenhpy
  * <p> 2022/5/2 21:03
@@ -90,9 +73,9 @@ public class CryptoApiProperties {
     public static class CryptoPath {
 
         /**
-         * aes加解密的key
+         * 用于加密解密的handler的key
          */
-        private String aesKey;
+        private String handlerKey;
 
         /**
          * 对应的请求路径 支持*通配符

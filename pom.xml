@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>crypto-api-sample</module>
-        <module>crypto-api-starter</module>
+        <module>crypto-api-core</module>
     </modules>
 
     <groupId>cn.beichenhpy</groupId>
@@ -69,7 +69,7 @@
             </dependency>
             <dependency>
                 <groupId>cn.beichenhpy</groupId>
-                <artifactId>crypto-api-starter</artifactId>
+                <artifactId>crypto-api-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

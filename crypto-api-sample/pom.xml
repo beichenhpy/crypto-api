@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sample</artifactId>
+    <artifactId>crypto-api-sample</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.beichenhpy</groupId>
-            <artifactId>crypto-api-starter</artifactId>
+            <artifactId>crypto-api-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
